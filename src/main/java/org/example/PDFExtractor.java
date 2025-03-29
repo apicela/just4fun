@@ -4,13 +4,14 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import technology.tabula.*;
 import technology.tabula.extractors.SpreadsheetExtractionAlgorithm;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 public class PDFExtractor {
-        private static List<List<String>> columnsData = new ArrayList<>();
+    private List<List<String>> tableData = new ArrayList<>();
         private ObjectExtractor oe;
         private SpreadsheetExtractionAlgorithm sea = new SpreadsheetExtractionAlgorithm();
 
@@ -20,16 +21,13 @@ public class PDFExtractor {
 
         void init() throws IOException {
             PageIterator pageIterator = oe.extract();
-            // Process each page
             while (pageIterator.hasNext()) {
                 Page page = pageIterator.next();
                 int pageNumber = page.getPageNumber();
 
-                // Only process pages 2-4 (assuming tables are there)
                 if (pageNumber >= 2 && pageNumber <= 4) {
                     System.out.println("\nProcessing page " + pageNumber);
 
-                    // Extract entire page or specify area if needed
                     List<Table> tables = sea.extract(page);
 
                     for (Table table : tables) {
@@ -38,32 +36,52 @@ public class PDFExtractor {
                 }
             }
             oe.close();
+            saveToCSV("extracted_data.csv");
+            zipFile("extracted_data.csv", "Teste_Jamil.zip");
         }
 
-        void printColumn(int column){
-            var list = columnsData.get(column);
-            for(String s : list){
-                System.out.println(s);
-            }
-        }
 
-    private static void extractTableRow(Table table) {
+    private void extractTableRow(Table table) {
         for (List<RectangularTextContainer> row : table.getRows()) {
+            List<String> rowData = new ArrayList<>();
             for (int i = 0; i < row.size(); i++) {
                 String text = row.get(i).getText()
                         .replace("\r", " ")
                         .replace("\n", " ")
                         .trim();
-                System.out.println(i+ ": " + text);
-                // Se a coluna ainda não foi criada, cria uma nova lista para ela
-                if (columnsData.size() <= i) {
-                    columnsData.add(new ArrayList<>());
-                }
-
-                // Adiciona o texto à coluna correspondente
-                columnsData.get(i).add(text);
+                rowData.add(text);
             }
+            tableData.add(rowData);
+            System.out.println(rowData);
             System.out.println("----------------------------------------");
+        }
+    }
+
+    private void saveToCSV(String fileName) throws IOException {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
+            for (List<String> row : tableData) {
+                writer.write(String.join(";", row));
+                writer.newLine();
+            }
+            System.out.println("Data saved to CSV: " + fileName);
+        }
+    }
+
+    private void zipFile(String fileName, String zipFileName) throws IOException {
+        try (FileInputStream fis = new FileInputStream(fileName);
+             FileOutputStream fos = new FileOutputStream(zipFileName);
+             ZipOutputStream zipOut = new ZipOutputStream(fos)) {
+
+            ZipEntry zipEntry = new ZipEntry(fileName);
+            zipOut.putNextEntry(zipEntry);
+
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = fis.read(buffer)) >= 0) {
+                zipOut.write(buffer, 0, length);
+            }
+            zipOut.closeEntry();
+            System.out.println("CSV file zipped: " + zipFileName);
         }
     }
 }
