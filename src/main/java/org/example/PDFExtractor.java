@@ -1,44 +1,68 @@
 package org.example;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.text.PDFTextStripper;
 import technology.tabula.*;
 import technology.tabula.extractors.SpreadsheetExtractionAlgorithm;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 public class PDFExtractor {
+    PDDocument document;
+    private String OD, AMB;
     private List<List<String>> tableData = new ArrayList<>();
-        private ObjectExtractor oe;
-        private SpreadsheetExtractionAlgorithm sea = new SpreadsheetExtractionAlgorithm();
+    private ObjectExtractor oe;
+    private SpreadsheetExtractionAlgorithm sea = new SpreadsheetExtractionAlgorithm();
+    boolean hasHeader = false;
+    public PDFExtractor(String path) throws IOException {
+        this.document = PDDocument.load(new File(path));
+        this.oe = new ObjectExtractor(document);
+    }
 
-        public PDFExtractor(String path) throws IOException {
-            this.oe = new ObjectExtractor(PDDocument.load(new File(path)));
-        }
+    void init() throws IOException {
+        findAbbreviations();
+        extractPDFData();
 
-        void init() throws IOException {
-            PageIterator pageIterator = oe.extract();
-            while (pageIterator.hasNext()) {
-                Page page = pageIterator.next();
-                int pageNumber = page.getPageNumber();
+    }
 
-                if (pageNumber >= 2 && pageNumber <= 4) {
-                    System.out.println("\nProcessing page " + pageNumber);
 
-                    List<Table> tables = sea.extract(page);
+    void extractPDFData() throws IOException {
+        for (int pageNumber = 1; pageNumber <= document.getNumberOfPages(); pageNumber++) {
+                Page page = oe.extract(pageNumber);
+                List<Table> tables = sea.extract(page);
 
-                    for (Table table : tables) {
-                        extractTableRow(table);
-                    }
+                for (Table table : tables) {
+                    extractTableRow(table);
                 }
             }
-            oe.close();
-            saveToCSV("extracted_data.csv");
-            zipFile("extracted_data.csv", "Teste_Jamil.zip");
+
+        oe.close();
+        saveToCSV("extracted_data.csv");
+        zipFile("extracted_data.csv", "Teste_Jamil.zip");
+    }
+
+     void findAbbreviations() throws IOException {
+        PDFTextStripper stripper = new PDFTextStripper();
+
+        stripper.setStartPage(4);
+        stripper.setEndPage(4);
+        String text = stripper.getText(document);
+        String[] lines = text.split("\n");
+        for(int i = lines.length -1; i> 0; i--){
+            if(lines[i].startsWith("OD: ")) {
+                this.OD = lines[i].replace("OD: ","").trim();
+            }
+             else if(lines[i].startsWith("AMB: ")) {
+                AMB = lines[i].replace("AMB: ","").trim();
+            }
+            if(OD != null && AMB != null) break;
         }
+    }
 
 
     private void extractTableRow(Table table) {
@@ -49,17 +73,26 @@ public class PDFExtractor {
                         .replace("\r", " ")
                         .replace("\n", " ")
                         .trim();
+
+                if(hasHeader && text.equals("PROCEDIMENTO")) break;
+                else if(text.equals("PROCEDIMENTO")) hasHeader = true;
+
+                    if (i == 3 && !text.isEmpty()) {
+                    text = OD;
+                }
+                else if (i == 4 && !text.isEmpty()){
+                    text = AMB.toString();
+                }
                 rowData.add(text);
             }
-            tableData.add(rowData);
-            System.out.println(rowData);
-            System.out.println("----------------------------------------");
+            if(rowData.size() > 1) tableData.add(rowData);
         }
     }
 
     private void saveToCSV(String fileName) throws IOException {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
             for (List<String> row : tableData) {
+                if(row.isEmpty()) continue;
                 writer.write(String.join(";", row));
                 writer.newLine();
             }

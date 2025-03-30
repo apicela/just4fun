@@ -6,7 +6,7 @@ import java.io.IOException;
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
     public static void main(String[] args) throws IOException {
-        String filePath = "downloads/test.pdf";
+        String filePath = "downloads/Anexo 1.pdf";
         var extractor = new PDFExtractor(filePath);
         extractor.init();
     }

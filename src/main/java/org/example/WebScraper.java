@@ -1,13 +1,23 @@
 package org.example;
 
-import java.io.*;
-import java.net.*;
-import java.nio.file.*;
-import java.util.zip.*;
-import org.jsoup.*;
-import org.jsoup.nodes.*;
-import org.jsoup.select.*;
-import java.util.concurrent.*;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 
 public class WebScraper {
@@ -19,10 +29,8 @@ public class WebScraper {
         try {
             Files.createDirectories(Paths.get(OUTPUT_DIR));
 
-            // Criar um ExecutorService para baixar arquivos em paralelo
-            ExecutorService executor = Executors.newFixedThreadPool(2);
+            ExecutorService executor = Executors.newFixedThreadPool(2); // thread p baixar simultaneo
 
-            // Conectar ao site e obter os links dos arquivos
             Document doc = Jsoup.connect(URL)
                     .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36")
                     .get();
@@ -39,8 +47,6 @@ public class WebScraper {
             }
 
             executor.shutdown();
-            executor.awaitTermination(10, TimeUnit.MINUTES);
-
             zipFiles();
             System.out.println("Download e compactação concluídos!");
 
