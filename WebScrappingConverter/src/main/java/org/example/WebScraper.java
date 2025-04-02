@@ -23,13 +23,13 @@ import java.util.zip.ZipOutputStream;
 public class WebScraper {
     private static final String URL = "https://www.gov.br/ans/pt-br/acesso-a-informacao/participacao-da-sociedade/atualizacao-do-rol-de-procedimentos";
     private static final String OUTPUT_DIR = "downloads";
-    private static final String ZIP_FILE = "anexos.zip";
+    private static final String ZIP_FILE = "apicela_web_scrapping_result.zip";
+    ExecutorService executor = Executors.newFixedThreadPool(2); // thread p baixar simultaneo
 
-    public static void main(String[] args) {
+    void init() throws IOException {
         try {
             Files.createDirectories(Paths.get(OUTPUT_DIR));
 
-            ExecutorService executor = Executors.newFixedThreadPool(2); // thread p baixar simultaneo
 
             Document doc = Jsoup.connect(URL)
                     .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36")
@@ -48,14 +48,11 @@ public class WebScraper {
 
             executor.shutdown();
             zipFiles();
-            System.out.println("Download e compactação concluídos!");
-
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
-    private static void downloadFile(String fileUrl) {
+        private static void downloadFile(String fileUrl) {
         System.out.println("DOWNLOADING... " + fileUrl);
         try {
             URL url = new URL(fileUrl);
@@ -68,6 +65,17 @@ public class WebScraper {
             }
         } catch (IOException e) {
             System.err.println("Erro ao baixar: " + fileUrl);
+            e.printStackTrace();
+        }
+    }
+
+    public void awaitCompletion() {
+        try {
+            if (!executor.awaitTermination(Long.MAX_VALUE, TimeUnit.SECONDS)) {
+                System.out.println("Timeout ao aguardar conclusão do scrapping.");
+            }
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
             e.printStackTrace();
         }
     }

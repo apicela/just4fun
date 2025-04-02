@@ -2,7 +2,8 @@ target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
-
+.idea
+downloads
 ### IntelliJ IDEA ###
 .idea/modules.xml
 .idea/jarRepositories.xml
@@ -43,3 +44,8 @@ anexos.zip
 .idea/encodings.xml
 .idea/misc.xml
 .idea/vcs.xml
+Teste_Jamil.zip
+WebScrappingConverter/extracted_data.csv
+WebScrappingConverter/apicela_web_scrapping_result.zip
+WebScrappingConverter/src/main/resources/META-INF/MANIFEST.MF
+WebScrappingConverter/out/artifacts/WebScrappingConverter_jar/WebScrappingConverter.jar
