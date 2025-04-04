@@ -1,0 +1,131 @@
+{
+	"info": {
+		"_postman_id": "dcc9ff72-6a50-4fa5-9f48-7facc012c2dd",
+		"name": "teste",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "42126076"
+	},
+	"item": [
+		{
+			"name": "server health check",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8000/health",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"health"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get all operadoras",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8000/operadoras",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"operadoras"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "busca operadora por texto",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8000/operadoras/busca?termo=bradesco",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"operadoras",
+						"busca"
+					],
+					"query": [
+						{
+							"key": "termo",
+							"value": "bradesco"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get despesas operadoras no ano",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8000/operadoras/despesas/ano",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"operadoras",
+						"despesas",
+						"ano"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get despesas operadoras no trimestre",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8000/operadoras/despesas/trimestre",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"operadoras",
+						"despesas",
+						"trimestre"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
