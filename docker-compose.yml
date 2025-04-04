@@ -1,21 +1,22 @@
 services:
-  backend:
-    build:
-      context: ./python-backend  # Caminho correto para o backend
-      dockerfile: Dockerfile
-    container_name: backend_app
-    working_dir: /app
-    ports:
-      - "8000:8000"
-    depends_on:
-      - db
-    environment:
-      - DATABASE_URL=${DATABASE_URL}
-    volumes:
-      - ./python-backend:/app
-    env_file:
-      - .env
-    restart: always 
+  # backend:
+  #   build:
+  #     context: ./python-backend
+  #     dockerfile: Dockerfile
+  #   container_name: backend_app
+  #   working_dir: /app
+  #   ports:
+  #     - "8000:8000"
+  #   depends_on:
+  #     db:
+  #       condition: service_healthy
+  #   environment:
+  #     - DATABASE_URL=${DATABASE_URL}
+  #   volumes:
+  #     - ./python-backend/app:/app
+  #   env_file:
+  #     - .env
+  #   restart: always 
 
   db:
     image: postgres:17
@@ -32,18 +33,23 @@ services:
       - "5432:5432"
     env_file:
       - .env
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
 
-  frontend:
-    build:
-      context: ./apicela-frontend  # Caminho correto para o frontend
-      dockerfile: Dockerfile
-    container_name: vue_frontend
-    ports:
-      - "8080:8080"
-    volumes:
-      - ./apicela-frontend:/app
-      - /app/node_modules  # Evita conflitos de dependências
-    depends_on:
-      - backend
-    environment:
-      - VITE_API_BASE_URL=http://backend:8000
+  # frontend:
+  #   build:
+  #     context: ./apicela-frontend
+  #     dockerfile: Dockerfile
+  #   container_name: vue_frontend
+  #   ports:
+  #     - "8080:8080"
+  #   volumes:
+  #     - ./apicela-frontend:/app
+  #     - /app/node_modules
+  #   depends_on:
+  #     - backend
+  #   environment:
+  #     - VITE_API_BASE_URL=http://backend:8000

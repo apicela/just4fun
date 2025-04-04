@@ -3,8 +3,10 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from routes import health, operadoras, demonstracoes
 from models import db
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 
 app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL")
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
