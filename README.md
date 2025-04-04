@@ -21,7 +21,8 @@
 3. Faça requisições ao servidor Python em http://localhost:8000
 
 # Documentação da API
-
+## Postman collection:
+- [/teste.postman_collection.json](https://github.com/apicela/just4fun/blob/main/teste.postman_collection.json)
 ## Base URL
 ```
 http://localhost:8000
