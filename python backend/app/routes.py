@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify
+from flask import Blueprint, jsonify, request
 from models import db, Operadora
 from sqlalchemy import text
 from datetime import date, timedelta
@@ -91,6 +91,26 @@ def maiores_despesas_trimestre():
             "total_despesa": float(row[2])
         } for row in result
     ]
+
+    return jsonify(data), 200
+
+@operadoras.route('/operadoras/busca', methods=['GET'])
+def buscar_operadoras():
+    termo = request.args.get('termo', '')  # Pega o termo da URL
+    termo = f"%{termo}%"  # Adiciona '%' para busca parcial no banco
+
+    query_busca = """
+    SELECT *
+    FROM operadoras
+    WHERE razao_social ILIKE :termo OR nome_fantasia ILIKE :termo
+    LIMIT 200;
+    """
+
+    result = db.session.execute(
+        text(query_busca), {"termo": termo}
+    ).fetchall()
+
+    data = [dict(row._mapping) for row in result]
 
     return jsonify(data), 200
 
