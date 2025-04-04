@@ -51,3 +51,18 @@ WebScrappingConverter/src/main/resources/META-INF/MANIFEST.MF
 WebScrappingConverter/out/artifacts/WebScrappingConverter_jar/WebScrappingConverter.jar
 python backend/app/__pycache__/models.cpython-311.pyc
 python backend/app/__pycache__/routes.cpython-311.pyc
+WebScrappingConverter/.gradle/*
+
+
+WebScrappingConverter/gradle/wrapper/gradle-wrapper.jar
+WebScrappingConverter/gradle/wrapper/gradle-wrapper.properties
+
+WebScrappingConverter/gradlew
+WebScrappingConverter/gradlew.bat
+
+*.log
+*.lock
+
+.idea/
+*.iml
+
