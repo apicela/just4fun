@@ -19,3 +19,134 @@
 1. Execute o seguinte comando no terminal: ```docker-compose up --build```
 2. Acesse o frontend pelo navegador: http://localhost:8080/
 3. Faça requisições ao servidor Python em http://localhost:8000
+
+# Documentação da API
+
+## Base URL
+```
+http://localhost:8000
+```
+
+## Rotas
+
+### 1. Operadoras
+
+#### **Listar todas as operadoras**
+**Endpoint:** `GET /operadoras`
+
+**Descrição:** Retorna uma lista com até 10 operadoras cadastradas no banco de dados.
+
+**Resposta:**
+```json
+[
+    {
+        "registro_ans": "123456",
+        "razao_social": "Operadora X",
+        "nome_fantasia": "Saúde X",
+        ...
+    },
+    ...
+]
+```
+
+---
+
+#### **Listar as operadoras com maiores despesas no último ano**
+**Endpoint:** `GET /operadoras/despesas/ano`
+
+**Descrição:** Retorna as 10 operadoras com os maiores gastos relacionados a eventos/sinistros conhecidos no último ano.
+
+**Resposta:**
+```json
+[
+    {
+        "razao_social": "Operadora A",
+        "nome_fantasia": "Plano A",
+        "total_despesa": 500000.00
+    },
+    ...
+]
+```
+
+---
+
+#### **Listar as operadoras com maiores despesas no último trimestre**
+**Endpoint:** `GET /operadoras/despesas/trimestre`
+
+**Descrição:** Retorna as 10 operadoras com os maiores gastos relacionados a eventos/sinistros conhecidos no último trimestre.
+
+**Resposta:**
+```json
+[
+    {
+        "razao_social": "Operadora B",
+        "nome_fantasia": "Plano B",
+        "total_despesa": 200000.00
+    },
+    ...
+]
+```
+
+---
+
+#### **Buscar operadoras por nome ou razão social**
+**Endpoint:** `GET /operadoras/busca`
+
+**Parâmetros:**
+- `termo` (query param) - Texto de busca (razao_social ou nome_fantasia)
+
+**Exemplo de requisição:**
+```
+GET /operadoras/busca?termo=Saude
+```
+
+**Resposta:**
+```json
+[
+    {
+        "registro_ans": "789012",
+        "razao_social": "Operadora Saúde",
+        "nome_fantasia": "Saúde Total",
+        ...
+    },
+    ...
+]
+```
+
+---
+
+### 2. Demonstrações Contábeis
+
+#### **Listar todas as demonstrações contábeis filtradas**
+**Endpoint:** `GET /demonstracoes`
+
+**Descrição:** Retorna até 200 registros da tabela de demonstrações contábeis que possuem a descrição relacionada a eventos/sinistros conhecidos.
+
+**Resposta:**
+```json
+[
+    {
+        "id": 1,
+        "descricao": "EVENTOS/ SINISTROS CONHECIDOS OU AVISADOS  DE ASSISTÊNCIA A SAÚDE MEDICO HOSPITALAR",
+        "vl_saldo_inicial": 100000,
+        "vl_saldo_final": 150000,
+        "data": "2024-04-01"
+    },
+    ...
+]
+```
+
+---
+
+### 3. Health Check
+
+#### **Verificar status do servidor**
+**Endpoint:** `GET /health`
+
+**Descrição:** Retorna um status simples indicando que o servidor está online.
+
+**Resposta:**
+```json
+"server is online :)"
+```
+
