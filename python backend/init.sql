@@ -44,12 +44,16 @@ CREATE TEMP TABLE temp_demonstracoes_contabeis (
     vl_saldo_inicial TEXT,  -- Importando como texto para tratar depois
     vl_saldo_final TEXT     -- Importando como texto para tratar depois
 );
-
-COPY temp_demonstracoes_contabeis 
-FROM '/data_import/1T2024.csv' 
-DELIMITER ';' 
-CSV HEADER 
-ENCODING 'UTF8';
+-- 2023
+COPY temp_demonstracoes_contabeis FROM '/data_import/1T2023.csv' DELIMITER ';' CSV HEADER ENCODING 'UTF8';
+COPY temp_demonstracoes_contabeis FROM '/data_import/2T2023.csv' DELIMITER ';' CSV HEADER ENCODING 'UTF8';
+COPY temp_demonstracoes_contabeis FROM '/data_import/3T2023.csv' DELIMITER ';' CSV HEADER ENCODING 'UTF8';
+COPY temp_demonstracoes_contabeis FROM '/data_import/4T2023.csv' DELIMITER ';' CSV HEADER ENCODING 'UTF8';
+-- 2024
+COPY temp_demonstracoes_contabeis FROM '/data_import/1T2024.csv' DELIMITER ';' CSV HEADER ENCODING 'UTF8';
+COPY temp_demonstracoes_contabeis FROM '/data_import/2T2024.csv' DELIMITER ';' CSV HEADER ENCODING 'UTF8';
+COPY temp_demonstracoes_contabeis FROM '/data_import/3T2024.csv' DELIMITER ';' CSV HEADER ENCODING 'UTF8';
+COPY temp_demonstracoes_contabeis FROM '/data_import/4T2024.csv' DELIMITER ';' CSV HEADER ENCODING 'UTF8';
 
 INSERT INTO demonstracoes_contabeis (data, reg_ans, cd_conta_contabil, descricao, vl_saldo_inicial, vl_saldo_final)
 SELECT 
