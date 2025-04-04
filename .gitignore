@@ -49,8 +49,8 @@ WebScrappingConverter/extracted_data.csv
 WebScrappingConverter/apicela_web_scrapping_result.zip
 WebScrappingConverter/src/main/resources/META-INF/MANIFEST.MF
 WebScrappingConverter/out/artifacts/WebScrappingConverter_jar/WebScrappingConverter.jar
-python backend/app/__pycache__/models.cpython-311.pyc
-python backend/app/__pycache__/routes.cpython-311.pyc
+python-backend/app/__pycache__/models.cpython-311.pyc
+python-backend/app/__pycache__/routes.cpython-311.pyc
 WebScrappingConverter/.gradle/*
 
 
