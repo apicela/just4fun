@@ -11,8 +11,11 @@
 
 
 ## ⚙️ Como configurar para teste da aplicação
-### Método 1 - Utilizando Docker (recomendado) 
-1. Clone este repositório
-2. Execute o seguinte comando no terminal: ```docker-compose up --build```
-3. Acesse o frontend pelo navegador: http://localhost:8080/
-4. Faça requisições ao servidor Python em http://localhost:8000
+- Clone este repositório
+### Web Scrapping + Transformação dados
+1. Leia o README: [WebScrappingConverter/README.MD](https://github.com/apicela/just4fun/blob/main/WebScrappingConverter/README.MD)
+
+### Teste banco de dados + frontend + backend - Utilizando Docker (recomendado) 
+1. Execute o seguinte comando no terminal: ```docker-compose up --build```
+2. Acesse o frontend pelo navegador: http://localhost:8080/
+3. Faça requisições ao servidor Python em http://localhost:8000
